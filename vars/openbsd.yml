@@ -1,0 +1,23 @@
+---
+__system_root_user: root
+__system_root_group: wheel
+__system_root_home: /root
+
+__system_mgmt_contact:
+  name:
+  email:
+
+__system_mgmt_network:
+  device:
+  address: []
+
+__system_mgmt_reports:
+  email:
+
+__system_kernel_config:
+__system_kernel_config_file: /etc/kernel.conf
+
+__system_sysctl_config:
+__system_sysctl_config_file: /etc/sysctl.conf
+
+__system_cron_update: false

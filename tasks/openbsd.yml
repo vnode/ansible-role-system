@@ -1,0 +1,66 @@
+---
+- name: persistent hostname is set
+  copy:
+    dest: /etc/myname
+    owner: "{{ system_root_user }}"
+    group: "{{ system_root_group }}"
+    mode: "0644"
+    content: "{{ system_hostname }}"
+  register: _system_myname
+
+- name: hostname is up to date
+  command:
+    cmd: "hostname {{ system_hostname }}"
+  when: _system_myname.changed
+
+- name: persistent sysctls are set
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: "{{ system_sysctl_config_file }}"
+    sysctl_set: true
+  loop:
+    "{{ system_sysctl_config | dict2items }}"
+
+- block:
+    - name: persistent kernel config is set
+      template:
+        src: "openbsd/kernel.conf/kernel.conf.j2"
+        dest: "{{ system_kernel_config_file }}"
+        owner: "{{ system_root_user }}"
+        group: "{{ system_root_group }}"
+        mode: "0640"
+    - name: KARL@next-boot is enabled for persistent custom kernel config
+      blockinfile:
+        path: "/etc/rc.shutdown"
+        block: "{{ lookup('template', 'templates/openbsd/kernel.conf/rc.shutdown.j2') }}"
+        marker: "# {mark} Enable KARL@next-boot"
+        owner: "{{ system_root_user }}"
+        group: "{{ system_root_group }}"
+        mode: "0644"
+   when: 
+    - system_kernel_config is defined
+    - system_kernel_config | length > 0
+
+- name: e-mail for root is forwarded
+  lineinfile:
+    line: "{{ system_mgmt_reports.email }}"
+    regexp: "{{ system_mgmt_reports.email }}"
+    state: present
+    path: "{{ root_home }}/.forward"
+    owner: "{{ system_root_user }}"
+    group: "{{ system_root_group }}"
+    mode: "0640"
+  when:
+    - system_mgmt_reports.email is defined
+    - system_mgmt_reports.email | length > 0
+
+- name: cron job for syspatch(8) update check
+  cron:
+    name: Check for available syspatch(8) updates
+    hour: "2"
+    minute: "~"
+    job: >
+      syspatch -c
+  when:
+    - system_cron_update

@@ -1,0 +1,18 @@
+---
+system_cron_update: "{{ __system_cron_update }}"
+
+system_hostname: "{{ inventory_hostname }}"
+
+system_mgmt_contact: "{{ __system_mgmt_contact }}"
+system_mgmt_network: "{{ __system_mgmt_network }}"
+system_mgmt_reports: "{{ __system_mgmt_reports }}"
+
+system_kernel_config: "{{ __system_kernel_config }}"
+system_kernel_config_file: "{{ __system_kernel_config_file }}"
+
+system_root_user: "{{ __system_root_user }}"
+system_root_group: "{{ __system_root_group }}"
+system_root_home: "{{ __system_root_home }}"
+
+system_sysctl_config: "{{ __system_sysctl_config }}"
+system_sysctl_config_file: "{{ __system_sysctl_config_file }}"

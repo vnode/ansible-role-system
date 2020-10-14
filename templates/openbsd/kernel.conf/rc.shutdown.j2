@@ -1,0 +1,7 @@
+if [[ -f {{ system_kernel_config_file }} ]]; then
+    ( /usr/bin/grep -v -e '^#' {{ system_kernel_config_file }} | /usr/sbin/config -ef -o /nbsd /bsd )
+    if [ $? -eq 0 ]; then
+        [[ ! -f /bsd ]] || cmp -s /nbsd /bsd || ln -f /bsd /obsd
+        umask 077 && mv /nbsd /bsd && sha256 -h /var/db/kernel.SHA256 /bsd
+    fi
+fi
