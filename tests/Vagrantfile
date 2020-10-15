@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #config.vm.box = "generic/openbsd6"
+  config.vm.box_check_update = true
+  config.ssh.insert_key = false
+
+  # Support multiple providers
+  config.vm.provider "vmware_fusion" do |vwf|
+    vwf.memory = "256"
+    vwf.linked_clone = true
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "256"
+    vb.linked_clone = true
+  end
+
+
+  # Provision multiple boxes
+  boxes = [
+    { :name => "openbsd", :ip => "192.0.2.2", :type => "openbsd", :box => "generic/openbsd6" },
+    { :name => "freebsd", :ip => "192.0.2.3", :type => "freebsd", :box => "generic/freebsd12" }
+  ]
+
+  boxes.each do |opts|
+    config.vm.define opts[:name] do |config|
+      config.vm.box = opts[:box]
+      config.vm.hostname = opts[:name]
+      config.vm.network "private_network", ip: opts[:ip]
+
+      if opts[:type] == "openbsd"
+        # Finish setting up the OpenBSD base box
+        config.vm.provision "shell", inline: <<-SHELL
+          echo 'https://cdn.openbsd.org/pub/OpenBSD' >/etc/installurl
+          pkg_add rsync--iconv python%3.7
+        SHELL
+      end
+
+      # Complete provisioning once all boxes are up
+      if opts[:name] == boxes.last[:name]
+        config.vm.provision "ansible" do |ansible|
+          ansible.config_file = "ansible.cfg"
+          ansible.inventory_path = "inventory"
+          ansible.playbook = "test.yml"
+          ansible.galaxy_role_file = "requirements.yml"
+          ansible.limit = "all"
+          ansible.verbose = "v"
+        end
+      end
+    end
+  end
+end
