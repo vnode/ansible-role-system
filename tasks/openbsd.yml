@@ -6,15 +6,10 @@
     group: "{{ system_root_group }}"
     mode: "0644"
     content: "{{ system_hostname }}"
-  register: _system_myname
-
-- name: hostname is up to date
-  command:
-    cmd: "hostname {{ system_hostname }}"
-  when: _system_myname.changed
+  notify: update hostname
 
 - name: persistent sysctls are set
-  ansible.posix.sysctl:
+  sysctl:
     name: "{{ item.key }}"
     value: "{{ item.value }}"
     sysctl_file: "{{ system_sysctl_config_file }}"
@@ -38,7 +33,7 @@
         owner: "{{ system_root_user }}"
         group: "{{ system_root_group }}"
         mode: "0644"
-   when: 
+  when:
     - system_kernel_config is defined
     - system_kernel_config | length > 0
 
