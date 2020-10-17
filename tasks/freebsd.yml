@@ -1,0 +1,52 @@
+---
+- name: persistent hostname is set
+  lineinfile:
+    line: "hostname=\"{{ system_hostname }}\""
+    regexp: "^hostname="
+    state: present
+    path: /etc/rc.conf
+  notify: update hostname
+
+- name: persistent sysctls are set
+  sysctl:
+    name: "{{ setting.key }}"
+    value: "{{ setting.value }}"
+    sysctl_file: "{{ system_sysctl_config_file }}"
+    sysctl_set: true
+  loop:
+    "{{ system_sysctl_config | default({}, True) | dict2items }}"
+  loop_control:
+    loop_var: setting
+  when:
+    - system_sysctl_config is defined
+
+- block:
+   - name: root has a .forward file
+     file:
+        path: "{{ system_root_home }}/.forward"
+        state: touch
+        access_time: preserve
+        modification_time: preserve
+        owner: "{{ system_root_user }}"
+        group: "{{ system_root_group }}"
+        mode: "0640"
+   - name: e-mail for root is forwarded
+     lineinfile:
+        line: "{{ system_mgmt_reports.email }}"
+        regexp: "{{ system_mgmt_reports.email }}"
+        state: present
+        path: "{{ system_root_home }}/.forward"
+  when:
+    - system_mgmt_reports.email is defined
+    - system_mgmt_reports.email | length > 0
+
+- name: cron job for freebsd-update(8) update check
+  cron:
+    name: Check for available freebsd-update patches
+    user: "{{ system_root_user }}"
+    hour: "2"
+    minute: "30"
+    job: >
+      /usr/sbin/freebsd-update cron
+  when:
+    - system_cron_update

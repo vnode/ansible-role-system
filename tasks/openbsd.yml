@@ -10,12 +10,16 @@
 
 - name: persistent sysctls are set
   sysctl:
-    name: "{{ item.key }}"
-    value: "{{ item.value }}"
+    name: "{{ setting.key }}"
+    value: "{{ setting.value }}"
     sysctl_file: "{{ system_sysctl_config_file }}"
     sysctl_set: true
   loop:
-    "{{ system_sysctl_config | dict2items }}"
+    "{{ system_sysctl_config | default({}, True) | dict2items }}"
+  loop_control:
+    loop_var: setting
+  when:
+    - system_sysctl_config is defined
 
 - block:
     - name: persistent kernel config is set
@@ -25,14 +29,20 @@
         owner: "{{ system_root_user }}"
         group: "{{ system_root_group }}"
         mode: "0640"
+    - name: Shutdown script exists
+      file:
+        state: touch
+        path: "/etc/rc.shutdown"
+        access_time: preserve
+        modification_time: preserve
+        owner: "{{ system_root_user }}"
+        group: "{{ system_root_group }}"
+        mode: "0644"
     - name: KARL@next-boot is enabled for persistent custom kernel config
       blockinfile:
         path: "/etc/rc.shutdown"
         block: "{{ lookup('template', 'templates/openbsd/kernel.conf/rc.shutdown.j2') }}"
-        marker: "# {mark} Enable KARL@next-boot"
-        owner: "{{ system_root_user }}"
-        group: "{{ system_root_group }}"
-        mode: "0644"
+        marker: "# {mark} KARL@next-boot for customized kernel"
   when:
     - system_kernel_config is defined
     - system_kernel_config | length > 0
@@ -42,13 +52,13 @@
     line: "{{ system_mgmt_reports.email }}"
     regexp: "{{ system_mgmt_reports.email }}"
     state: present
-    path: "{{ root_home }}/.forward"
+    path: "{{ system_root_home }}/.forward"
     owner: "{{ system_root_user }}"
     group: "{{ system_root_group }}"
     mode: "0640"
   when:
     - system_mgmt_reports.email is defined
-    - system_mgmt_reports.email | length > 0
+    - system_mgmt_reports.email
 
 - name: cron job for syspatch(8) update check
   cron:

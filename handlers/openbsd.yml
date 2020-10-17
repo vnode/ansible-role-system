@@ -1,4 +1,0 @@
----
-- name: update hostname
-  command:
-    cmd: "hostname {{ system_hostname }}"

@@ -1,5 +1,28 @@
 ---
-- hosts: localhost
+- hosts: openbsd
   remote_user: root
+  become: yes
+  vars:
+    system_hostname: "{{ inventory_hostname }}-test"
+    system_sysctl_config:
+      net.inet.ip.tcp.ecn: 1
+    system_mgmt_reports:
+      email: reports-openbsd@example.invalid
+    system_kernel_config: |
+      disable lm*
+    system_cron_update: true
   roles:
-    - "{{ 'vnode.' if lookup('env','ROLE_NAME') else 'ansible-role-' }}system"
+    - ansible-role-system
+
+- hosts: freebsd
+  remote_user: root
+  become: yes
+  vars:
+    system_hostname: "{{ inventory_hostname }}-test"
+    system_sysctl_config:
+      net.inet.ip.forwarding: 1
+    system_mgmt_reports:
+      email: reports-freebsd@example.invalid
+    system_cron_update: true
+  roles:
+    - ansible-role-system
