@@ -31,8 +31,10 @@ install:
 before_script:
   # Use actual Ansible Galaxy role name for the project directory.
   - cd ../
+  - ls -lah
   - ln -s ansible-role-${ROLE_NAME} vnode.${ROLE_NAME}
   - cd vnode.${ROLE_NAME}
+  - ls -lah
 
 script:
   # Basic role syntax check
