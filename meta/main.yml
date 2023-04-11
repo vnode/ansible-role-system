@@ -1,20 +1,18 @@
 galaxy_info:
+  namespace: vnode
   role_name: system
   author: Rogier Krieger
   description: Configure basic system settings (hostname, sysctl, kernel config)
   company: vNode.net
   issue_tracker_url: https://github.com/vnode/ansible-role-system/issues/
   license: MIT
-  min_ansible_version: 2.9
+  min_ansible_version: "2.9"
 
   platforms:
   - name: OpenBSD
     versions:
-    - 6.7
+    - all
   - name: FreeBSD
-    versions:
-    - 12.1
-  - name: SmartOS
     versions:
     - all
 
