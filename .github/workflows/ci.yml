@@ -21,11 +21,18 @@ jobs:
       - name: Install linting dependencies
         run: pip3 install yamllint ansible-base ansible-lint
 
+      - name: Get Ansible-Galaxy variables
+        uses: juliojimenez/yamler@v0
+        id: meta
+        with:
+          yaml-file: "meta/main.yml"
+
       - name: Create ansible.cfg for testing
         run: |
           cat <<EOF > ansible.cfg
           [defaults]
           inventory = inventory
+          roles_path = roles
           EOF
 
       - name: Create inventory for testing
@@ -34,6 +41,11 @@ jobs:
           [all]
           localhost ansible_host=127.0.0.1
           EOF
+
+      - name: Enable dependency roles
+        run: |
+          mkdir -p roles
+          ln -s . ${{ steps.meta.outputs.galaxy_info__namespace }}.${{ steps.meta.outputs.galaxy_info__role_name }}
 
       - name: Lint code
         run: |
