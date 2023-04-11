@@ -45,7 +45,7 @@ jobs:
       - name: Enable dependency roles
         run: |
           mkdir -p roles
-          ln -s . ${{ steps.meta.outputs.galaxy_info__namespace }}.${{ steps.meta.outputs.galaxy_info__role_name }}
+          ln -s . roles/${{ steps.meta.outputs.galaxy_info__namespace }}.${{ steps.meta.outputs.galaxy_info__role_name }}
 
       - name: Lint code
         run: |
