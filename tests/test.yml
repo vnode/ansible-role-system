@@ -12,7 +12,7 @@
       disable lm*
     system_cron_update: true
   roles:
-    - ansible-role-system
+    - vnode.system
 
 - hosts: freebsd
   remote_user: root
@@ -25,4 +25,4 @@
       email: reports-freebsd@example.invalid
     system_cron_update: true
   roles:
-    - ansible-role-system
+    - vnode.system
