@@ -7,7 +7,9 @@ This role provides basic system setup and configuration for OpenBSD systems.
 # Requirements
 
 ## Operation
-No external roles and/or modules are required to use this role.
+This role depends on a small number of common collections within the
+Ansible ecosystem. For the current list (which is also used in CI runs),
+see []`tests/requirements.yml`](https://github.com/vnode/ansible-role-system/blob/main/tests/requirements.yml).
 
 ## Testing & Development
 For testing and development, this role depends on the following roles and external tools:

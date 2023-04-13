@@ -1,4 +1,6 @@
 ---
-collections: []
+collections:
+  - ansible.posix
+  - community.general
 
 roles: []
