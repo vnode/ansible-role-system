@@ -1,4 +1,1 @@
 ---
-- name: update hostname
-  command:
-    cmd: "hostname {{ system_hostname | default(inventory_hostname, True) }}"
