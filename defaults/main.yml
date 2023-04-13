@@ -7,9 +7,11 @@ _system_hosts_entries:
     aliases: [ 'localhost' ]
   - address: '::1'
     hostname: "{{ system_hostname }}"
-    aliases: [ 'localhost']
+    aliases: [ 'localhost' ]
 system_hosts_entries: "{{ __system_hosts_entries | default(_system_hosts_entries) }}"
 system_hosts_file: "{{ __system_hosts_file | default('/etc/hosts') }}"
 system_hosts_file_owner: "{{ __system_hosts_file_owner | default('root') }}"
 system_hosts_file_group: "{{ __system_hosts_file_group | default('wheel') }}"
 system_hosts_file_mode: "{{ __system_hosts_file_mode | default('0644') }}"
+
+system_sysctl_entries: ""
