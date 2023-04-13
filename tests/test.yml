@@ -1,5 +1,6 @@
 ---
-- hosts: openbsd
+- name: Test role on OpenBSD
+  hosts: openbsd
   remote_user: root
   become: yes
   vars:
@@ -14,7 +15,8 @@
   roles:
     - vnode.system
 
-- hosts: freebsd
+- name: Test role on FreeBSD
+  hosts: freebsd
   remote_user: root
   become: yes
   vars:
