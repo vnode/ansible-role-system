@@ -6,10 +6,11 @@
 - name: Hostname present in hosts file
   ansible.builtin.lineinfile:
     create: True
+    regexp: "^{{ item.address }}"
+    line: "{{ item.address }}\t{{ [item.hostname, item.aliases] | join(' ') }}" # noqa no-tabs
+    state: present
     path: "{{ system_hosts_file }}"
     owner: "{{ system_hosts_file_owner }}"
     group: "{{ system_hosts_file_group }}"
     mode: "{{ system_hosts_file_mode }}"
-    regexp: "^{{ item.address }}"
-    line: "{{ item.address }}\t{{ [item.hostname, item.aliases] | join(' ') }}" # noqa no-tabs
   loop: "{{ system_hosts_entries }}"
