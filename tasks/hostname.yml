@@ -11,5 +11,5 @@
     group: "{{ system_hosts_file_group }}"
     mode: "{{ system_hosts_file_mode }}"
     regexp: "^{{ item.address }}"
-    line: "{{ item.address }}\t{{ [ item.hostname, item.aliases ] | join(' ') }}"
+    line: "{{ item.address }}\t{{ [ item.hostname, item.aliases ] | join(' ') }}" # noqa no-tabs
   loop: "{{ system_hosts_entries }}"
