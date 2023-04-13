@@ -7,7 +7,7 @@
   ansible.builtin.lineinfile:
     create: True
     regexp: "^{{ item.address }}"
-    line: "{{ item.address }}\t{{ [item.hostname, item.aliases] | join(' ') }}" # noqa no-tabs
+    line: "{{ item.address }}\t{{ ([item.hostname] + item.aliases) | join(' ') }}" # noqa no-tabs
     state: present
     path: "{{ system_hosts_file }}"
     owner: "{{ system_hosts_file_owner }}"
