@@ -1,3 +1,13 @@
-openbsd	ansible_host=192.0.2.2
-freebsd	ansible_host=192.0.2.3
+[all]
+test-openbsd    ansible_host=192.0.2.2
+test-freebsd    ansible_host=192.0.2.3
+test-debian     ansible_host=192.0.2.4
 
+[openbsd]
+test-openbsd
+
+[freebsd]
+test-freebsd
+
+[debian]
+test-debian
