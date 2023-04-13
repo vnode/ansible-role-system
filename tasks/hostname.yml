@@ -1,7 +1,7 @@
 ---
 - name: Hostname is up-to-date
   ansible.builtin.hostname:
-    hostname: "{{ system_hostname }}"
+    name: "{{ system_hostname }}"
 
 - name: Hostname present in hosts file
   ansible.builtin.lineinfile:
