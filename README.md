@@ -1,6 +1,6 @@
 # Ansible role: system
 
-[![Build Status](https://travis-ci.org/vnode/ansible-role-system.svg?branch=master)](https://travis-ci.org/vnode/ansible-role-system)
+[![CI](https://github.com/vnode/ansible-role-system/actions/workflows/ci.yml/badge.svg)](https://github.com/vnode/ansible-role-system/actions/workflows/ci.yml)
 
 This role provides basic system setup and configuration for OpenBSD systems.
 
