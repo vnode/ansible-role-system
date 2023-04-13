@@ -8,3 +8,6 @@
 
 - name: Set system hostname
   ansible.builtin.include_tasks: 'hostname.yml'
+
+- name: Set sysctl entries
+  ansible.builtin.include_tasks: 'sysctl.yml'
