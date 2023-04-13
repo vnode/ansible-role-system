@@ -1,8 +1,11 @@
 ---
-name: CI/CD
+name: CI
 on:
   pull_request:
   push:
+  schedule:
+    # Sunday 04:30 UTC
+    - cron: "30 4 * * 0"
 
 jobs:
   lint:
@@ -19,13 +22,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install linting dependencies
-        run: pip3 install yamllint ansible-base ansible-lint
-
-      - name: Get Ansible-Galaxy variables
-        uses: juliojimenez/yamler@v0
-        id: meta
-        with:
-          yaml-file: "meta/main.yml"
+        run: pip3 install yamllint ansible-core ansible-lint
 
       - name: Create ansible.cfg for testing
         run: |
@@ -45,7 +42,7 @@ jobs:
       - name: Enable dependency roles
         run: |
           mkdir -p roles
-          ln -s . roles/${{ steps.meta.outputs.galaxy_info__namespace }}.${{ steps.meta.outputs.galaxy_info__role_name }}
+          ln -s . roles/vnode.system
 
       - name: Lint code
         run: |
