@@ -1,0 +1,14 @@
+---
+#__system_hostname:
+
+__system_hosts_entries:
+  - address: '127.0.0.1'
+    hostname: "{{ system_hostname }}"
+    aliases: [ 'localhost' ]
+  - address: '::1'
+    hostname: "{{ system_hostname }}"
+    aliases: [ 'localhost', 'ip6-localhost', 'ip6-loopback' ]
+#__system_hosts_file:
+#__system_hosts_file_owner:
+__system_hosts_file_group: 'root'
+#__system_hosts_file_mode:

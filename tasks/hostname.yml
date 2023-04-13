@@ -1,0 +1,15 @@
+---
+- name: Hostname is up-to-date
+  ansible.builtin.hostname:
+    hostname: "{{ system_hostname }}"
+
+- name: Hostname present in hosts file
+  ansible.builtin.lineinfile:
+    create: True
+    path: "{{ system_hosts_file }}"
+    owner: "{{ system_hosts_file_owner }}"
+    group: "{{ system_hosts_file_group }}"
+    mode: "{{ system_hosts_file_mode }}"
+    regexp: "^{{ item.address }}"
+    line: "{{ item.address }}\t{{ [ item.hostname, item.aliases ] | join(' ') }}"
+  loop: "{{ system_hosts_entries }}"

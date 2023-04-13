@@ -1,14 +1,10 @@
 ---
 - name: Include OS-specific variables
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
-    - "vars/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "vars/{{ ansible_os_family | lower }}.yml"
+    - "vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "vars/{{ ansible_distribution }}.yml"
+    - "vars/{{ ansible_os_family }}.yml"
 
-# OS-specific tasks  
-- include_tasks: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
-
-# OS-agnostic tasks
+- name: Set system hostname
+  ansible.builtin.include_tasks: 'hostname.yml'
